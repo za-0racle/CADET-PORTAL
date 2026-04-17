@@ -1,0 +1,389 @@
+
+/* ==============================
+   1. GLOBAL & RESET
+   ============================== */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body { 
+    font-family: 'Poppins', sans-serif; 
+    background: white;
+    overflow-x: hidden; 
+}
+
+/* Montserrat for Official Headings & Branding */
+h1, h2, h3, h4, h5, .org-name span, .side-heading, .btn-text { 
+    font-family: 'Montserrat', sans-serif; 
+    text-transform: uppercase; 
+}
+
+/* ==============================
+   2. MASTER OVERLAY & LAYOUT
+   ============================== */
+.overlay {
+    background: rgba(0, 43, 5, 0.7); /* Deep Green Tint */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; 
+    color: white;
+}
+
+/* Custom background for Auth pages to distinguish from forms */
+body.auth-page {
+    background: url('../images/cd40.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* =========================================
+   2. UNIVERSAL NAVBAR (FIXED)
+   ========================================= */
+header.navbar {
+    position: sticky; 
+    top: 0; 
+    z-index: 2000; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    background: white; 
+    padding: 8px 5%; /* Reduced padding for a thinner bar */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-title img {
+    width: 40px;
+}
+
+.org-name {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.org-name span {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    color: #004d00;
+}
+
+.org-name span.Last_Child {
+    color: red !important;
+}
+
+/* Desktop Navigation Items */
+.icon-nav {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.icon-nav a {
+    color: #004d00;
+    font-size: 15px;
+    text-decoration: none;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.icon-nav a:hover {
+    color: red;
+}
+
+.nav-text {
+    font-size: 11px;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: 0.5px;
+}
+
+/* Dropdown Menu */
+.nav-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    z-index: 10;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.dropdown-content a {
+    color: #333 !important;
+    padding: 12px 16px;
+    display: block;
+    font-size: 13px;
+    border-bottom: 1px solid #eee;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+    color: #004d00 !important;
+}
+
+.nav-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Mobile Menu Button */
+.menu-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #004d00;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+/* ==============================
+   2. AUTH CARD CONTAINER
+   ============================== */
+.form-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.form-container {
+    background: white;
+    color: #333;
+    padding: 40px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 420px; /* Professional login width */
+    text-align: center;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+    border-top: 5px solid #004d00;
+}
+
+.form-logo {
+    width: 80px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #004d00;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 30px;
+}
+
+/* ==============================
+   3. INPUT STYLING
+   ============================== */
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+    outline: none;
+    background: #fdfdfd;
+}
+
+.input-group input:focus {
+    border-color: #004d00;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(0, 77, 0, 0.1);
+}
+
+.input-hint {
+    display: block;
+    font-size: 11px;
+    color: #888;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+/* ==============================
+   4. BUTTON & SPINNER
+   ============================== */
+button[type="submit"] {
+    background: #004d00;
+    color: white;
+    padding: 15px;
+    border: none;
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    text-transform: uppercase;
+}
+
+button[type="submit"]:hover:enabled {
+    background: #cc0000; /* Institutional Red accent */
+    transform: translateY(-2px);
+}
+
+button:disabled {
+    background: #ccc !important;
+    cursor: not-allowed;
+}
+
+/* Spinner Animation (The Roll) */
+.spinner {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid white;
+    border-radius: 50%;
+    animation: roll 0.8s linear infinite;
+}
+
+@keyframes roll {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+button.loading .btn-text {
+    display: none;
+}
+
+button.loading .spinner {
+    display: block;
+}
+
+/* ==============================
+   5. MESSAGES & FOOTER
+   ============================== */
+.footer {
+    background: #ffffff;
+    color: #002b05;
+    padding: 60px 0 20px;
+    border-top: 1px solid #eeeeee;
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
+}
+
+.footer-container {
+    width: 92%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    font-size: 11px;
+    color: white;
+}
+.status-box {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.auth-footer {
+    margin-top: 25px;
+    font-size: 13px;
+    color: #666;
+}
+
+.auth-footer a {
+    color: #004d00;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+    color: #cc0000;
+}
+
+/* ==============================
+   6. RESPONSIVE
+   ============================== */
+@media screen and (max-width: 480px) {
+    .form-container {
+        padding: 30px 20px;
+        box-shadow: none; /* Flatter for mobile */
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .menu-btn {
+        display: block;
+    }
+
+    .icon-nav {
+        display: none; /* Hidden by default on mobile */
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: white;
+        flex-direction: column;
+        padding: 20px 0;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .icon-nav.active {
+        display: flex;
+    }
+
+    .icon-nav a {
+        width: 100%;
+        padding: 15px 5%;
+        border-bottom: 1px solid #eee;
+    }
+
+    .dropdown-content {
+        position: static;
+        box-shadow: none;
+        background: #fafafa;
+        padding-left: 30px;
+    }
+}

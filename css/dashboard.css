@@ -1,0 +1,296 @@
+/* ==============================
+   1. DASHBOARD LAYOUT & ANIMATIONS
+   ============================== */
+.dashboard-layout {
+    display: flex;
+    min-height: 100vh;
+    background: #f0f2f5;
+}
+
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-40px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.animate-left { animation: slideInLeft 0.7s ease-out forwards; }
+.animate-up { animation: slideUp 0.8s ease-out both; }
+.animate-fade { animation: fadeIn 1s ease-in both; }
+
+/* ==============================
+   2. SIDEBAR STYLING
+   ============================== */
+.sidebar {
+    width: 280px;
+    background: #002b05; /* Deep CADETI Green */
+    color: white;
+    padding: 30px 20px;
+    position: fixed;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.3);
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+.sidebar-header h3 {
+    font-family: 'Montserrat';
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+.avatar-frame {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    border: 3px solid #4caf50;
+    margin: 0 auto 15px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.avatar-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Prevents passport from stretching */
+}
+
+.user-profile-brief {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 20px;
+}
+
+.user-profile-brief h4 {
+    font-family: 'Montserrat';
+    font-size: 16px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.user-profile-brief small {
+    color: #4caf50;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+/* SIDE NAV BUTTONS */
+.side-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.side-nav a, .side-nav .logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+    color: #ccc;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: 0.3s;
+    font-size: 14px;
+    font-weight: 500;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.side-nav a.active, .side-nav a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.logout-btn {
+    margin-top: 20px;
+    background: #c62828 !important; /* Safety Red */
+    color: white !important;
+}
+
+.logout-btn:hover {
+    background: #e53935 !important;
+}
+
+/* ==============================
+   3. MAIN CONTENT AREA
+   ============================== */
+.main-content {
+    margin-left: 280px; 
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-bar {
+    background: white;
+    padding: 20px 40px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.top-bar h1 {
+    font-family: 'Montserrat';
+    font-size: 22px;
+    color: #002b05;
+}
+
+.content-wrap {
+    padding: 40px;
+    flex: 1;
+}
+
+/* ==============================
+   4. DATA CARDS GRID
+   ============================== */
+.profile-data-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.data-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border-top: 5px solid #002b05;
+    transition: transform 0.3s ease;
+}
+
+.data-card:hover {
+    transform: translateY(-5px);
+}
+
+.data-card label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #888;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.data-card label i { color: #4caf50; }
+
+.data-card h3 {
+    font-family: 'Montserrat';
+    font-size: 17px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.data-card p {
+    font-size: 14px;
+    color: #666;
+}
+
+/* ==============================
+   5. PERSONNEL DETAILS LIST
+   ============================== */
+.full-details-section {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.section-title {
+    font-family: 'Montserrat';
+    font-size: 16px;
+    color: #002b05;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f0f2f5;
+    padding-bottom: 10px;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.detail-item .label {
+    font-weight: 700;
+    color: #888;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+.detail-item .value {
+    color: #333;
+    font-weight: 500;
+    text-align: right;
+}
+
+/* ==============================
+   6. AUTH LOADER STYLING
+   ============================== */
+.login-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #002b05;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.spinner {
+    width: 40px; height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* ==============================
+   7. PRINT & RESPONSIVE
+   ============================== */
+@media print {
+    .sidebar, .top-bar, #authGuardLoader, footer { display: none !important; }
+    .main-content { margin-left: 0 !important; padding: 0 !important; }
+    .dashboard-card, .full-details-section, .data-card {
+        box-shadow: none !important;
+        border: 1px solid #eee !important;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .profile-data-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media screen and (max-width: 768px) {
+    .sidebar { width: 70px; padding: 20px 10px; }
+    .sidebar h3, .user-profile-brief, .side-nav span { display: none; }
+    .main-content { margin-left: 70px; }
+    .profile-data-grid { grid-template-columns: 1fr; }
+    .detail-item { flex-direction: column; align-items: flex-start; }
+    .detail-item .value { text-align: left; margin-top: 2px; }
+}

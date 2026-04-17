@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Officer Login | CADETI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css"> <!-- Global styles -->
+    <link rel="stylesheet" href="css/auth.css"> 
+</head>
+<body>
+
+<div class="overlay">
+    <!-- UNIVERSAL NAVBAR -->
+     <header class="navbar">
+        <div class="logo-title">
+            <img src="images/logo.png" alt="CADETI Logo">
+            <div class="org-name">
+                <span>COMMUNITY AMBASSADOR</span>
+                <span>FOR DEVELOPMENTAL AND ENGAGEMENT</span>
+                <span>TECHNIQUES INITIATIVE</span> 
+                <span class="Last_Child">(C.A.D.E.T.I.)</span>
+            </div>
+        </div>
+
+        <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+
+        <nav class="icon-nav" id="navLinks">
+            <a href="index.html"><i class="fa-solid fa-house"></i> <span class="nav-text">Home</span></a>
+            <div class="nav-dropdown">
+                <a href="#" class="dropbtn"><i class="fa-solid fa-user-plus"></i> <span class="nav-text">Registration</span></a>
+                <div class="dropdown-content">
+                    <a href="recruit-reg.html">Recruit Registration</a>
+                    <a href="member-validation.html">Member Validation</a>
+                    <a href="old-member.html">Member Revalidation</a>
+                </div>
+            </div>
+            <a href="login.html"><i class="fa-solid fa-right-to-bracket"></i> <span class="nav-text">Login</span></a>
+        </nav>
+    </header>
+
+    <!-- LOGIN FORM SECTION -->
+    <section class="form-section">
+        <div class="form-container animate-up">
+            <img src="images/logo.png" class="form-logo">
+            <h2>OFFICER PORTAL</h2>
+            <p class="subtitle">Enter Service Number to access your Dashboard</p>
+
+            <form id="loginForm">
+                <div class="input-group">
+                    <!-- Label changed to Service Number for clarity -->
+                    <input type="text" id="loginServiceNum" placeholder="Service Number (CAD/...)" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                </div>
+
+                <button type="submit" id="submitBtn">
+                    <span class="btn-text">Authorize & Enter</span>
+                    <div class="spinner"></div>
+                </button>
+
+                <div id="errorMessage" class="error-box" style="display: none; background: #fff5f5; border: 1px solid #ffcccc; color: #c00; padding: 10px; border-radius: 6px; margin-top: 15px; font-size: 13px;">
+                    <!-- Errors here -->
+                </div>
+
+                <p style="margin-top: 20px; font-size: 12px; color: #666;">
+                    First time? <a href="signup.html" style="color: green; text-decoration: none; font-weight: 600;">Activate Account</a>
+                </p>
+            </form>
+        </div>
+    </section>
+
+    <!-- UNIVERSAL FOOTER (Simplified for Auth pages) -->
+    <footer class="footer" style="background: transparent; border: none; color: white;">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Oracle Tek Global Solution | CADETI National Headquaters</p>
+        </div>
+    </footer>
+</div>
+
+<script type="module" src="js/auth.js"></script>
+</body>
+</html>

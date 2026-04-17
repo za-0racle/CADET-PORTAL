@@ -1,0 +1,30 @@
+/CADETI-PORTAL
+│
+├── /css
+│   ├── style.css           // Global: Navbar, Footer, Animations
+│   ├── auth.css            // Login & Signup styles
+│   ├── dashboard.css       // Officer & Admin Dashboard styles
+│   └── about-style.css     // About Page specific styles
+│
+├── /js
+│   ├── config.js           // Master Firebase & Apps Script URLs
+│   ├── auth.js             // Logic for Login, Signup, & Auth Guards
+│   ├── registration.js     // Shared logic for all 3 reg forms
+│   ├── admin.js            // Logic for the Admin Master Panel
+│   └── about.js            // Logic for the Dynamic Roadmap fetch
+│
+├── /images
+│   ├── logo.png
+│   ├── bg.jpg
+│   └── hbg1.png ... hbg6.png // Carousel images
+│
+├── index.html              // Home Page (The Entrance)
+├── about.html              // About Us & Dynamic Roadmap
+├── recruit-reg.html        // Path 1: New Intake
+├── member-validation.html  // Path 2: Recruit -> Officer Conversion
+├── old-member.html         // Path 3: Existing Officer Revalidation
+├── login.html              // Portal Entrance
+├── signup.html             // Account Activation
+├── dashboard.html          // Officer's Personal Area
+└── admin.html              // Master Administrative Panel
+optional registration.html

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CADETI Admin Portal | Master Dashboard</title>
+  <link rel="stylesheet" href="css/admin-style.css">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+
+  <!-- LOGIN SECTION -->
+  <div id="loginSection" class="login-overlay">
+    <div class="login-card animate-up">
+      <img src="images/logo.png" alt="Logo">
+      <h2>Admin Login</h2>
+      <p>Authorized Personnel Only</p>
+      
+      <div class="input-group">
+        <input type="text" id="adminUser" placeholder="Username" required>
+      </div>
+      <div class="input-group">
+        <input type="password" id="adminPass" placeholder="Password" required>
+      </div>
+      
+      <button id="loginBtn" onclick="handleLogin()">
+        <span class="btn-text">Access Dashboard</span>
+        <div class="spinner"></div>
+      </button>
+      <p id="loginError" class="error-msg"></p>
+    </div>
+  </div>
+
+  <!-- DASHBOARD SECTION -->
+  <div id="dashboardSection" style="display: none;">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header animate-left">
+        <img src="images/logo.png" width="40">
+        <h3>ADMIN PANEL</h3>
+      </div>
+      
+      <div class="stats-container">
+        <!-- 1. Total (Combined) -->
+        <div class="stat-box animate-card">
+          <i class="fa-solid fa-database"></i>
+          <h2 id="statTotal">0</h2>
+          <small>Total Registry</small>
+        </div>
+        
+        <!-- 2. Male (Combined) -->
+        <div class="stat-box animate-card" style="border-left-color: #3498db;">
+          <i class="fa-solid fa-mars"></i>
+          <h2 id="statMale">0</h2>
+          <small>Male Members</small>
+        </div>
+        
+        <!-- 3. Female (Combined) -->
+        <div class="stat-box animate-card" style="border-left-color: #e91e63;">
+          <i class="fa-solid fa-venus"></i>
+          <h2 id="statFemale">0</h2>
+          <small>Female Members</small>
+        </div>
+
+        <!-- 4. NEW: Recruits Only Card -->
+        <div class="stat-box animate-card" style="border-left-color: #f39c12;">
+          <i class="fa-solid fa-user-plus"></i>
+          <h2 id="statRecruits">0</h2>
+          <small>Recruits</small>
+        </div>
+      </div>
+
+      <nav class="side-nav animate-left">
+        <button onclick="fetchData()" class="refresh-btn">
+            <i class="fa-solid fa-rotate"></i> <span>Refresh Database</span>
+        </button>
+        <button onclick="logout()" class="logout-btn">
+            <i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <div class="content-wrap">
+          <header class="top-bar animate-fade">
+            <div class="title-area">
+                <h1>C.A.D.E.T.I MASTER DATABASE</h1>
+                <p id="filterStatus">Syncing Registry...</p>
+            </div>
+            
+            <div class="top-actions">
+                <button class="export-btn" onclick="downloadFilteredData()">
+                    <i class="fa-solid fa-file-csv"></i> <span>Export CSV</span>
+                </button>
+            </div>
+          </header>
+
+          <!-- DYNAMIC FILTERS -->
+          <section class="filter-section animate-fade">
+            <div class="filter-grid">
+                <!-- NEW: Category Filter -->
+                <select id="filterCategory" onchange="applyFilters()">
+                    <option value="">All Categories</option>
+                    <option value="Officer">Validated Officers</option>
+                    <option value="Recruit">Fresh Recruits</option>
+                </select>
+
+                <select id="filterState" onchange="applyFilters()"><option value="">All States</option></select>
+                <select id="filterArea" onchange="applyFilters()"><option value="">All Areas</option></select>
+                <select id="filterDept" onchange="applyFilters()"><option value="">All Departments</option></select>
+                <select id="filterGender" onchange="applyFilters()">
+                    <option value="">All Genders</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+                
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchInput" placeholder="Search names, IDs..." onkeyup="applyFilters()">
+                </div>
+            </div>
+          </section>
+
+          <!-- MASTER TABLE -->
+          <section class="table-wrapper animate-up">
+            <table id="adminTable">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>System ID</th>
+                  <th>Full Name</th>
+                  <th>Rank</th>
+                  <th>Category</th>
+                  <th>State / Area</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </section>
+      </div>
+
+      <!-- FOOTER -->
+      <footer class="footer">
+        <div class="footer-container">
+          <div class="footer-grid">
+            <div class="footer-brand">
+              <div class="footer-logo-name">
+                <span>COMMUNITY AMBASSADOR</span>
+                <span>FOR DEVELOPMENTAL AND ENGAGEMENT</span>
+                <span>TECHNIQUES INITIATIVE</span> 
+                <span class="Last_Child">(C.A.D.E.T.I.)</span>
+              </div>
+              <p class="footer-motto">Building and securing the hope of youths in society.</p>
+              <div class="contact-details">
+                <p><i class="fas fa-envelope"></i> cadetinitiative1@gmail.com</p>
+                <p><i class="fas fa-phone"></i> +234 701-1888-770</p>
+              </div>
+            </div>
+            
+            <div class="footer-links">
+              <h4>Quick Links</h4>
+              <ul>
+                <li><a href="index.html">Home Portal</a></li>
+                <li><a href="recruit-reg.html">Recruit Registration</a></li>
+                <li><a href="member-validation.html">Member Validation</a></li>
+                <li><a href="old-member.html">Member Revalidation</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-social">
+              <h4>Connect</h4>
+              <div class="social-icons">
+                <a href="https://www.facebook.com/share/17sJmwQRfN/" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/cadetinitiative/" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://whatsapp.com/channel/0029VaBt7fA9sBI0CF5WLL37" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <p>&copy; 2026 Oracle Tek GS. Master Admin Interface.</p>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <!-- Floating WhatsApp -->
+    <a href="https://wa.me/message/AZ2WMBRJHD2QJ1" class="whatsapp-float" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+      <span>Admin Support</span>
+    </a>
+
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>
