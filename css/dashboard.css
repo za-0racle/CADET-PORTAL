@@ -247,7 +247,102 @@
 }
 
 /* ==============================
-   6. AUTH LOADER STYLING
+   6. MOBILE OFF-CANVAS SYSTEM
+   ============================== */
+
+/* Hamburger Button (Hidden on Desktop) */
+.menu-toggle-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #002b05;
+    font-size: 22px;
+    cursor: pointer;
+    margin-right: 20px;
+}
+
+/* Close Button (Hidden on Desktop) */
+.close-sidebar {
+    display: none;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Sidebar Overlay (Dark Backdrop) */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    display: none; /* Controlled by JS */
+    backdrop-filter: blur(4px);
+}
+
+@media screen and (max-width: 768px) {
+    .menu-toggle-btn { display: block; }
+    .close-sidebar { display: block; }
+
+    .sidebar {
+        left: -280px; /* Hide off-screen to the left */
+        transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 280px;
+    }
+
+    /* Logic when sidebar is opened via JS */
+    .sidebar.active {
+        left: 0;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    .main-content {
+        margin-left: 0; /* Full width on mobile */
+    }
+
+    .top-bar {
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    /* REFIX: Ensure Profile Brief (Photo) stays visible in the slide-out menu */
+    .user-profile-brief {
+        display: block !important; 
+        margin-top: 20px;
+    }
+
+    .side-nav span {
+        display: inline !important;
+    }
+
+    .profile-data-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .detail-item .value {
+        text-align: left;
+        margin-top: 5px;
+    }
+}
+
+/* ==============================
+   7. AUTH LOADER & PRINT
    ============================== */
 .login-overlay {
     position: fixed;
@@ -270,27 +365,8 @@
 
 @keyframes spin { 100% { transform: rotate(360deg); } }
 
-/* ==============================
-   7. PRINT & RESPONSIVE
-   ============================== */
 @media print {
-    .sidebar, .top-bar, #authGuardLoader, footer { display: none !important; }
+    .sidebar, .top-bar, .sidebar-overlay, .menu-toggle-btn { display: none !important; }
     .main-content { margin-left: 0 !important; padding: 0 !important; }
-    .dashboard-card, .full-details-section, .data-card {
-        box-shadow: none !important;
-        border: 1px solid #eee !important;
-    }
-}
-
-@media screen and (max-width: 1024px) {
-    .profile-data-grid { grid-template-columns: 1fr 1fr; }
-}
-
-@media screen and (max-width: 768px) {
-    .sidebar { width: 70px; padding: 20px 10px; }
-    .sidebar h3, .user-profile-brief, .side-nav span { display: none; }
-    .main-content { margin-left: 70px; }
-    .profile-data-grid { grid-template-columns: 1fr; }
-    .detail-item { flex-direction: column; align-items: flex-start; }
-    .detail-item .value { text-align: left; margin-top: 2px; }
+    .data-card, .full-details-section { box-shadow: none !important; border: 1px solid #eee !important; }
 }

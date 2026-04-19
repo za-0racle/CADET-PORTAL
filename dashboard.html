@@ -16,8 +16,15 @@
 <body>
 
 <div id="dashboardWrapper" class="dashboard-layout" style="display: none;">
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+    
+    <!-- 1. SIDEBAR OVERLAY (Visible only on mobile when menu is open) -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <!-- 2. SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Close button for mobile -->
+        <button class="close-sidebar" id="closeSidebar"><i class="fa-solid fa-xmark"></i></button>
+
         <div class="sidebar-header">
             <img src="images/logo.png" width="40">
             <h3>OFFICER PORTAL</h3>
@@ -25,7 +32,6 @@
         
         <div class="user-profile-brief">
             <div class="avatar-frame">
-                <!-- To this (assuming your image folder is 'images'): -->
                  <img id="profilePhoto" src="images/logo.png" alt="Officer Photo">
             </div>
             <h4 id="profileName">---</h4>
@@ -34,9 +40,7 @@
 
         <nav class="side-nav">
             <a href="#" class="active"><i class="fa-solid fa-id-badge"></i> <span>Personnel Info</span></a>
-            <!-- Link for the official PDF download -->
             <a href="#" id="downloadPDF" target="_blank"><i class="fa-solid fa-file-pdf"></i> <span>Download Form</span></a>
-            <!-- ID for Logout logic -->
             <button class="logout-btn" id="logoutBtn">
                 <i class="fa-solid fa-power-off"></i> <span>Logout</span>
             </button>
@@ -47,9 +51,14 @@
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
+    <!-- 3. MAIN CONTENT -->
     <main class="main-content">
         <header class="top-bar">
+            <!-- Hamburger Toggle Button -->
+            <button class="menu-toggle-btn" id="sidebarToggle">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
             <div class="welcome-text">
                 <h1>Personnel Dashboard</h1>
                 <p id="serviceNumDisplay">Service Number: ---</p>
@@ -59,21 +68,18 @@
         <div class="content-wrap">
             <!-- DATA CARDS GRID -->
             <section class="profile-data-grid">
-                <!-- Card 1: Command -->
                 <div class="data-card animate-up">
                     <label><i class="fa-solid fa-building-shield"></i> Current Command</label>
                     <h3 id="dataState">---</h3>
                     <p id="dataArea">---</p>
                 </div>
                 
-                <!-- Card 2: Department -->
                 <div class="data-card animate-up" style="animation-delay: 0.1s;">
                     <label><i class="fa-solid fa-briefcase"></i> Assignment</label>
                     <h3 id="dataDept">---</h3>
                     <p id="dataPost">---</p>
                 </div>
 
-                <!-- Card 3: Contact -->
                 <div class="data-card animate-up" style="animation-delay: 0.2s;">
                     <label><i class="fa-solid fa-envelope"></i> Contact Info</label>
                     <h3 id="dataPhone">---</h3>
@@ -85,7 +91,6 @@
             <section class="full-details-section card-shadow animate-up" style="animation-delay: 0.3s;">
                 <h4 class="section-title">Personnel Records</h4>
                 <div class="details-list">
-                    <!-- IDs here match dashboard.js mapping -->
                     <div class="detail-item"><span class="label">Full Name:</span> <span id="full_name" class="value">---</span></div>
                     <div class="detail-item"><span class="label">Residential Address:</span> <span id="full_address" class="value">---</span></div>
                     <div class="detail-item"><span class="label">Current Occupation:</span> <span id="full_occupation" class="value">---</span></div>
@@ -103,7 +108,7 @@
     </main>
 </div>
 
-<!-- PAGE AUTH LOADER (Shows until data is fetched) -->
+<!-- PAGE LOADER -->
 <div id="authGuardLoader" class="login-overlay">
     <div class="spinner" style="display:block;"></div>
     <p style="color:white; margin-top:20px; font-family:'Montserrat';">Securing Connection...</p>

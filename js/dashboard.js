@@ -27,7 +27,6 @@ onAuthStateChanged(auth, async (user) => {
         try {
             console.log("Authentication verified. UID:", user.uid);
             
-            // Reference the specific Firestore document named after the user's UID
             const docRef = doc(db, "users", user.uid);
             const docSnap = await getDoc(docRef);
 
@@ -41,20 +40,19 @@ onAuthStateChanged(auth, async (user) => {
                 if (loader) loader.style.display = 'none';
                 if (wrapper) wrapper.style.display = 'flex';
             } else {
-                console.error("Critical: Document missing for authenticated UID.");
+                console.error("Critical: Document missing for UID.");
                 alert("Personnel profile not found. Please re-activate your account.");
                 window.location.href = 'signup.html';
             }
         } catch (error) {
             console.error("Firestore sync failure:", error);
-            alert("Database Error: Access to your profile was denied by security rules.");
+            alert("Database Error: Access denied by security rules.");
         }
     }
 });
 
 /**
  * 2. UI POPULATION ENGINE
- * Maps Firestore clean keys to HTML elements.
  */
 function populateDashboard(data) {
     const setUI = (id, value) => {
@@ -66,7 +64,7 @@ function populateDashboard(data) {
     setUI('profileName', `${data.surname || ''} ${data.firstName || ''}`);
     setUI('profileRank', data.rank || "Commissioned Officer");
     
-    // Automatic Photo Loading with Drive Fix
+    // Auto-load Passport Photo with the Google Drive Fix
     const photoEl = document.getElementById('profilePhoto');
     if (photoEl) {
         photoEl.src = getDirectDriveLink(data.passportUrl);
@@ -75,7 +73,7 @@ function populateDashboard(data) {
     // --- HEADER INFO ---
     setUI('serviceNumDisplay', `Service Number: ${data.serviceNumber || 'PENDING'}`);
 
-    // --- QUICK DATA CARDS (TOP GRID) ---
+    // --- QUICK DATA CARDS ---
     setUI('dataState', data.state);
     setUI('dataArea', data.area);
     setUI('dataDept', data.department);
@@ -83,43 +81,59 @@ function populateDashboard(data) {
     setUI('dataPhone', data.phone);
     setUI('dataEmail', data.email);
 
-    // --- PERSONNEL RECORDS (BOTTOM TABLE) ---
+    // --- PERSONNEL RECORDS ---
     setUI('full_name', `${data.firstName || ''} ${data.otherName || ''} ${data.surname || ''}`);
     setUI('full_address', data.address);
     setUI('full_occupation', data.occupation);
     setUI('full_nok', `${data.nokName || ''} (${data.nokRelation || ''})`);
     setUI('full_uid', data.uniqueID);
 
-    // --- PDF DOWNLOAD SYSTEM ---
+    // --- PDF DOWNLOAD LINK ---
     const pdfLink = document.getElementById('downloadPDF');
     if (pdfLink) {
         if (data.pdfUrl && data.pdfUrl.startsWith('http')) {
             pdfLink.href = data.pdfUrl;
             pdfLink.style.opacity = "1";
             pdfLink.style.pointerEvents = "auto";
-            pdfLink.innerHTML = `<i class="fa-solid fa-file-pdf"></i> <span>Download Official Form</span>`;
+            pdfLink.innerHTML = `<i class="fa-solid fa-file-pdf"></i> <span>Download Form</span>`;
         } else {
             pdfLink.style.opacity = "0.5";
             pdfLink.style.pointerEvents = "none";
-            pdfLink.innerHTML = `<i class="fa-solid fa-clock"></i> <span>Form Status: Generating...</span>`;
+            pdfLink.innerHTML = `<i class="fa-solid fa-clock"></i> <span>Generating...</span>`;
         }
     }
 }
 
 /**
- * 3. LOGOUT LOGIC
- * Safely destroys the session and clears local tokens.
+ * 3. INTERACTIVE UI LOGIC (Sidebar & Logout)
  */
 document.addEventListener('DOMContentLoaded', () => {
+    // A. Mobile Sidebar Toggle Logic
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const closeBtn = document.getElementById('closeSidebar');
+
+    function toggleMenu() {
+        if (sidebar && overlay) {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+    }
+
+    if (toggleBtn) toggleBtn.addEventListener('click', toggleMenu);
+    if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
+    if (overlay) overlay.addEventListener('click', toggleMenu);
+
+    // B. Logout Logic
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
             if (confirm("Are you sure you want to end your secure session?")) {
                 signOut(auth).then(() => {
-                    console.log("Session terminated.");
                     window.location.href = 'login.html';
                 }).catch((error) => {
-                    alert("Error terminating session: " + error.message);
+                    alert("Error: " + error.message);
                 });
             }
         });
