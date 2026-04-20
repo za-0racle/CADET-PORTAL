@@ -1,7 +1,7 @@
 // ==========================================
 // CONFIGURATION
 // ==========================================
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxnREMULjuPFZJeQBB5h5zz3SWNmtAqXdjcPaTgAEZx6HJXvHtO4DKtDUoN0W3i5pzNQA/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaSQid7O0KeDO6fDhWDyhclRIuXAi7ckhWczXCaC9wwu0I25goEa4ycKdxbJ2IjmKCFg/exec";
 
 // DOM Elements - Logic Steps
 const searchStep = document.getElementById('searchStep');

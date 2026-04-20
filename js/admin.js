@@ -1,7 +1,7 @@
 // ==========================================
 // CONFIGURATION
 // ==========================================
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuD0cKtVO891xIA0qp0wm_b3sth9eRE7hbd58coWSpxSY6s3SoT4ZaXiMrK-5RpoChzQ/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaSQid7O0KeDO6fDhWDyhclRIuXAi7ckhWczXCaC9wwu0I25goEa4ycKdxbJ2IjmKCFg/exec";
 
 const ADMIN_USERNAME = "AdminCAD";
 const ADMIN_PASSWORD = "Oracle2026";
