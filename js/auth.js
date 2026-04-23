@@ -6,24 +6,9 @@ import {
     onAuthStateChanged, 
     signOut 
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-/**
- * 1. FIRESTORE CONNECTIVITY TEST
- * This runs once to ensure your rules and connection are active.
- */
-async function verifyFirestore() {
-    try {
-        await setDoc(doc(db, "system_checks", "last_run"), {
-            status: "Online",
-            time: new Date().toISOString()
-        });
-        console.log("✅ FIRESTORE STATUS: CONNECTED");
-    } catch (e) {
-        console.error("❌ FIRESTORE STATUS: CONNECTION ERROR", e);
-    }
-}
-verifyFirestore();
+import { 
+    doc, setDoc, collection, addDoc, serverTimestamp, getDoc // Added getDoc here
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // Global flag to prevent Auth Guard from redirecting before Firestore sync is finished
 window.isProcessingSignup = false;
@@ -32,8 +17,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const signupForm = document.getElementById('signupForm');
 
+    // Password Reset Elements
+    const forgotLink = document.getElementById('forgotPasswordLink');
+    const resetModal = document.getElementById('resetModal');
+    const closeResetBtn = document.getElementById('closeResetBtn');
+    const submitResetBtn = document.getElementById('submitResetBtn');
+    
+    // Recovery Elements for Option B
+    const resetServiceInp = document.getElementById('resetServiceNum');
+    const nameDisplay = document.getElementById('nameDisplayArea');
+    const officerNameText = document.getElementById('fetchedOfficerName');
+    const emailGroup = document.getElementById('contactEmailGroup');
+    const resetEmailInp = document.getElementById('resetContactEmail');
+    const resetMessage = document.getElementById('resetMessage');
+
     // ==========================================
-    // 2. LOGIN LOGIC (Shadow Email Strategy)
+    // 1. LOGIN LOGIC
     // ==========================================
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
@@ -49,9 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const shadowEmail = getShadowEmail(serviceNum);
-                console.log("Authenticating:", serviceNum);
                 await signInWithEmailAndPassword(auth, shadowEmail, pass);
-                // On Success: onAuthStateChanged (section 4) handles the redirect to dashboard.html
+                // Auth Guard below handles the redirect based on role
             } catch (error) {
                 btn.classList.remove('loading');
                 btn.disabled = false;
@@ -59,7 +57,110 @@ document.addEventListener('DOMContentLoaded', () => {
                     errorBox.style.display = 'block';
                     errorBox.innerText = "Access Denied: Invalid Service Number or Password.";
                 }
-                console.error("Login Failure:", error.code);
+            }
+        });
+    }
+
+    // ==========================================
+    // 2. PASSWORD RECOVERY LOGIC (OPTION B)
+    // ==========================================
+    if (forgotLink) {
+        forgotLink.onclick = () => {
+            resetModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        };
+    }
+
+    if (closeResetBtn) {
+        closeResetBtn.onclick = () => {
+            resetModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        };
+    }
+
+    if (resetServiceInp) {
+        resetServiceInp.addEventListener('change', async () => {
+            const sn = resetServiceInp.value.trim().toUpperCase();
+            if (sn.length < 5) return; 
+
+            resetMessage.style.color = "#666";
+            resetMessage.innerText = "🔍 Searching Registry...";
+
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=searchByServiceNumber&serviceNumber=${encodeURIComponent(sn)}`);
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    const fullName = `${result.data["First Name"]} ${result.data["Surname"]}`;
+                    officerNameText.innerText = fullName;
+                    nameDisplay.style.display = "block";
+                    emailGroup.style.display = "block";
+                    submitResetBtn.disabled = false;
+                    submitResetBtn.style.opacity = "1";
+                    resetMessage.innerText = "";
+                    if(result.data["Email"]) resetEmailInp.value = result.data["Email"];
+                } else {
+                    resetMessage.style.color = "red";
+                    resetMessage.innerText = "❌ Service Number not found.";
+                    nameDisplay.style.display = "none";
+                    emailGroup.style.display = "none";
+                    submitResetBtn.disabled = true;
+                    submitResetBtn.style.opacity = "0.5";
+                }
+            } catch (e) {
+                resetMessage.innerText = "⚠️ Connection Error.";
+            }
+        });
+    }
+
+    if (submitResetBtn) {
+        submitResetBtn.addEventListener('click', async () => {
+            const serviceNum = resetServiceInp.value.trim().toUpperCase();
+            const officerName = officerNameText.innerText;
+            const contactEmail = resetEmailInp.value.trim();
+            const btnText = submitResetBtn.querySelector('.btn-text');
+            const spinner = submitResetBtn.querySelector('.spinner');
+
+            if (!contactEmail) {
+                resetMessage.style.color = "red";
+                resetMessage.innerText = "Error: Contact email is required.";
+                return;
+            }
+
+            submitResetBtn.disabled = true;
+            spinner.style.display = 'block';
+            btnText.innerText = "SENDING...";
+
+            try {
+                await addDoc(collection(db, "password_resets"), {
+                    serviceNumber: serviceNum,
+                    officerName: officerName,
+                    contactEmail: contactEmail,
+                    status: "pending",
+                    requestedAt: serverTimestamp()
+                });
+
+                resetMessage.style.color = "green";
+                resetMessage.innerText = "✅ Request Received! National Command will contact you at: " + contactEmail;
+                resetServiceInp.value = "";
+
+                setTimeout(() => { 
+                    resetModal.style.display = 'none'; 
+                    document.body.style.overflow = 'auto';
+                    submitResetBtn.disabled = true;
+                    submitResetBtn.style.opacity = "0.5";
+                    spinner.style.display = 'none';
+                    btnText.innerText = "SUBMIT REQUEST";
+                    nameDisplay.style.display = "none";
+                    emailGroup.style.display = "none";
+                }, 6000);
+
+            } catch (error) {
+                resetMessage.style.color = "red";
+                resetMessage.innerText = "Failed to log request.";
+                submitResetBtn.disabled = false;
+                spinner.style.display = 'none';
+                btnText.innerText = "SUBMIT REQUEST";
             }
         });
     }
@@ -83,11 +184,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             btn.classList.add('loading');
             btn.disabled = true;
-            if (msgBox) msgBox.style.display = 'none';
 
             try {
-                // STEP A: Fetch data from Google Sheets via Apps Script
-                console.log("Verifying Service Number with National Command...");
                 const response = await fetch(`${SCRIPT_URL}?action=searchByServiceNumber&serviceNumber=${encodeURIComponent(serviceNum)}`);
                 const result = await response.json();
 
@@ -95,17 +193,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error("Service Number not found. Ensure you have been officially validated.");
                 }
 
-                // Activate safety flag to block Auth Guard redirect
                 window.isProcessingSignup = true;
 
-                // STEP B: Create account in Firebase Auth
                 const shadowEmail = getShadowEmail(serviceNum);
                 const userCred = await createUserWithEmailAndPassword(auth, shadowEmail, pass);
                 const uid = userCred.user.uid;
 
-                console.log("User Created. UID:", uid);
-
-                // STEP C: Comprehensive Mapping (Syncing all 26 columns to Firestore)
                 const s = result.data;
                 const profileData = {
                     firstName: s["First Name"] || "",
@@ -115,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     occupation: s["Occupation"] || "",
                     gender: s["Gender"] || "",
                     phone: s["Phone Number"] || "",
-                    email: s["Email"] || s["Email "] || "", // Account for possible space in header
+                    email: s["Email"] || s["Email "] || "",
                     serviceNumber: serviceNum,
                     rank: s["Rank"] || "Officer",
                     department: s["Department"] || "",
@@ -130,79 +223,82 @@ document.addEventListener('DOMContentLoaded', () => {
                     pdfUrl: s["PDF URL"] || "",
                     uniqueID: s["Unique ID"] || "",
                     memberType: s["Member Type"] || "Officer",
-                    userId: uid, // Stored to match Security Rules
+                    userId: uid,
                     activatedAt: new Date().toISOString()
                 };
 
-                // STEP D: Save to Firestore (Named after the new UID)
-                console.log("Mirroring Personnel Record to Cloud...");
                 await setDoc(doc(db, "users", uid), profileData);
                 
-                console.log("Sync Complete.");
+                msgBox.style.display = 'block';
+                msgBox.style.color = "green";
+                msgBox.innerText = "Portal Activated! Preparing Dashboard...";
 
-                if (msgBox) {
-                    msgBox.style.display = 'block';
-                    msgBox.style.color = "green";
-                    msgBox.innerText = "Portal Activated! Preparing Dashboard...";
-                }
-
-                // Final Step: Redirect after UI confirmation
                 setTimeout(() => {
-                    window.isProcessingSignup = false; // Release the flag
-                    window.location.href = 'dashboard.html';
+                    window.isProcessingSignup = false;
+                    window.location.href = '/dashboard.html';
                 }, 2000);
 
             } catch (error) {
                 window.isProcessingSignup = false; 
                 btn.classList.remove('loading');
                 btn.disabled = false;
-                if (msgBox) {
-                    msgBox.style.display = 'block';
-                    msgBox.style.color = "red";
-                    msgBox.innerText = error.message;
-                }
-                console.error("Activation Error:", error);
+                msgBox.style.display = 'block';
+                msgBox.style.color = "red";
+                msgBox.innerText = error.message;
             }
         });
     }
 });
 
 /**
- * 4. AUTH GUARD & NAVIGATION OBSERVER
- * Monitors session state and handles secure redirects.
+ * 4. AUTH GUARD (Refined with Admin Distinction)
  */
-onAuthStateChanged(auth, (user) => {
-    // If the user is currently signing up, the observer must wait for setDoc to finish.
+onAuthStateChanged(auth, async (user) => {
     if (window.isProcessingSignup) return;
 
-    const path = window.location.pathname;
-    const isDashboard = path.includes('dashboard.html');
-    const isAuthPage = path.includes('login.html') || path.includes('signup.html');
+    const path = window.location.pathname.toLowerCase();
+    const isLoginPage = path.includes('login');
+    const isSignupPage = path.includes('signup');
+    const isDashboard = path.includes('dashboard');
+    const isAdminFile = path.includes('admin.html');
+    const isAuthPage = isLoginPage || isSignupPage;
 
     if (user) {
         console.log("Session active:", user.email);
-        // If logged in but on login/signup page, move to dashboard
-        if (isAuthPage) window.location.href = 'dashboard.html';
+        
+        // ONLY auto-redirect if sitting on Login/Signup
+        if (isAuthPage) {
+            try {
+                // Check if user is an admin
+                const adminDoc = await getDoc(doc(db, "admins", user.uid));
+                if (adminDoc.exists()) {
+                    window.location.href = '/Admin.html';
+                } else {
+                    window.location.href = '/dashboard.html';
+                }
+            } catch (e) {
+                // Fallback to officer dashboard
+                window.location.href = '/dashboard.html';
+            }
+        }
     } else {
-        console.log("No active session.");
-        // If not logged in but trying to view dashboard, kick to login
-        if (isDashboard) window.location.href = 'login.html';
+        // If logged out and trying to view a protected page, kick to login
+        if (isDashboard || isAdminFile) {
+            window.location.href = '/login.html';
+        }
     }
 
-    // Hide initial auth loader if it exists in the HTML
     const loader = document.getElementById('authGuardLoader');
     if (loader) loader.style.display = 'none';
 });
 
 /**
  * 5. GLOBAL LOGOUT
- * Destroys the Firebase session token and clears the browser state.
  */
 window.handleLogout = () => {
     if (confirm("Are you sure you want to exit the CADETI secure portal?")) {
         signOut(auth).then(() => {
-            console.log("Session destroyed.");
-            window.location.href = 'login.html';
+            window.location.href = '/login.html';
         }).catch((err) => {
             console.error("Logout error:", err);
         });

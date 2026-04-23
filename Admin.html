@@ -3,202 +3,270 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CADETI Admin Portal | Master Dashboard</title>
+  <title>CADETI Admin Portal | National Command</title>
+  
+  <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/admin-style.css">
-  
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
-  
-  <!-- Font Awesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
-<body>
+<body class="admin-body">
 
-  <!-- LOGIN SECTION -->
+  <!-- 1. SECURE LOGIN OVERLAY -->
   <div id="loginSection" class="login-overlay">
-    <div class="login-card animate-up">
-      <img src="images/logo.png" alt="Logo">
-      <h2>Admin Login</h2>
-      <p>Authorized Personnel Only</p>
-      
-      <div class="input-group">
-        <input type="text" id="adminUser" placeholder="Username" required>
+    <div class="login-glass-card animate-up">
+      <div class="login-header">
+        <img src="images/logo.png" alt="CADETI Logo" class="login-logo">
+        <h2>NATIONAL COMMAND</h2>
+        <p>Command & Control Authorization</p>
       </div>
-      <div class="input-group">
-        <input type="password" id="adminPass" placeholder="Password" required>
+      <div class="login-body">
+        <div class="input-group">
+          <i class="fa-solid fa-user-shield"></i>
+          <input type="text" id="adminUser" placeholder="Service Number / Email" required>
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="adminPass" placeholder="Access Password" required>
+        </div>
+        <button id="loginBtn" class="cmd-btn" type="button">
+            <span class="btn-text">AUTHENTICATE ACCESS</span>
+            <div class="spinner"></div>
+        </button>
+        <p id="loginError" class="error-msg"></p>
       </div>
-      
-      <button id="loginBtn" onclick="handleLogin()">
-        <span class="btn-text">Access Dashboard</span>
-        <div class="spinner"></div>
-      </button>
-      <p id="loginError" class="error-msg"></p>
     </div>
   </div>
 
-  <!-- DASHBOARD SECTION -->
-  <div id="dashboardSection" style="display: none;">
+  <!-- 2. MASTER DASHBOARD SECTION -->
+  <div id="dashboardSection" class="dashboard-container" style="display: none;">
     
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-header animate-left">
-        <img src="images/logo.png" width="40">
-        <h3>ADMIN PANEL</h3>
+    <!-- MOBILE TOGGLE BUTTON -->
+    <button class="mobile-toggle" id="mobileToggle"><i class="fa-solid fa-bars"></i></button>
+
+    <!-- SIDEBAR (FIXED NAVIGATION) -->
+    <aside class="cmd-sidebar">
+      <div class="sidebar-top">
+        <img src="images/logo.png" class="sidebar-logo">
+        <div class="admin-identity">
+            <h3 id="adminRoleName">---</h3> <!-- JS will fill this -->
+            <span id="adminScope">---</span>  <!-- JS will fill this -->
+        </div>
       </div>
       
-      <div class="stats-container">
-        <!-- 1. Total (Combined) -->
-        <div class="stat-box animate-card">
-          <i class="fa-solid fa-database"></i>
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <small>STRENGTH</small>
           <h2 id="statTotal">0</h2>
-          <small>Total Registry</small>
         </div>
-        
-        <!-- 2. Male (Combined) -->
-        <div class="stat-box animate-card" style="border-left-color: #3498db;">
-          <i class="fa-solid fa-mars"></i>
-          <h2 id="statMale">0</h2>
-          <small>Male Members</small>
-        </div>
-        
-        <!-- 3. Female (Combined) -->
-        <div class="stat-box animate-card" style="border-left-color: #e91e63;">
-          <i class="fa-solid fa-venus"></i>
-          <h2 id="statFemale">0</h2>
-          <small>Female Members</small>
-        </div>
-
-        <!-- 4. NEW: Recruits Only Card -->
-        <div class="stat-box animate-card" style="border-left-color: #f39c12;">
-          <i class="fa-solid fa-user-plus"></i>
+        <div class="kpi-card accent-gold">
+          <small>QUEUE</small>
           <h2 id="statRecruits">0</h2>
-          <small>Recruits</small>
         </div>
       </div>
 
-      <nav class="side-nav animate-left">
-        <button onclick="fetchData()" class="refresh-btn">
-            <i class="fa-solid fa-rotate"></i> <span>Refresh Database</span>
+      <nav class="cmd-nav">
+        <button onclick="switchTab('database')" class="nav-btn active" id="tab-db">
+            <i class="fa-solid fa-database"></i> <span>Registry</span>
         </button>
-        <button onclick="logout()" class="logout-btn">
-            <i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span>
+        <button onclick="switchTab('promotions')" class="nav-btn" id="tab-promo">
+            <i class="fa-solid fa-award"></i> <span>Promotions</span>
         </button>
+        <button onclick="switchTab('enrollments')" class="nav-btn" id="tab-enroll">
+            <i class="fa-solid fa-graduation-cap"></i> <span>Applications</span>
+        </button>
+        <button onclick="switchTab('graduation')" class="nav-btn" id="tab-grad">
+            <i class="fa-solid fa-file-signature"></i> <span>Graduation</span>
+        </button>
+        <button onclick="switchTab('resets')" class="nav-btn" id="tab-resets">
+            <i class="fa-solid fa-key"></i> <span>Security Hub</span>
+        </button>
+
+        <div id="superAdminTools" class="nav-group" style="display: none;">
+            <label>HQ Control</label>
+            <button onclick="switchTab('courses')" class="nav-btn" id="tab-courses">
+                <i class="fa-solid fa-book"></i> <span>Publisher</span>
+            </button>
+            <button onclick="switchTab('admins')" class="nav-btn" id="tab-admins">
+                <i class="fa-solid fa-shield-halved"></i> <span>Admins</span>
+            </button>
+        </div>
       </nav>
+
+      <div class="sidebar-bottom">
+        <button onclick="window.fetchData()" class="action-btn-outline">Sync Data</button>
+        <button onclick="window.logout()" class="exit-btn">Exit</button>
+      </div>
     </aside>
 
-    <!-- Main Content Area -->
-    <main class="main-content">
-      <div class="content-wrap">
-          <header class="top-bar animate-fade">
-            <div class="title-area">
-                <h1>C.A.D.E.T.I MASTER DATABASE</h1>
-                <p id="filterStatus">Syncing Registry...</p>
-            </div>
-            
-            <div class="top-actions">
-                <button class="export-btn" onclick="downloadFilteredData()">
-                    <i class="fa-solid fa-file-csv"></i> <span>Export CSV</span>
-                </button>
-            </div>
-          </header>
-
-          <!-- DYNAMIC FILTERS -->
-          <section class="filter-section animate-fade">
-            <div class="filter-grid">
-                <!-- NEW: Category Filter -->
-                <select id="filterCategory" onchange="applyFilters()">
-                    <option value="">All Categories</option>
-                    <option value="Officer">Validated Officers</option>
-                    <option value="Recruit">Fresh Recruits</option>
-                </select>
-
-                <select id="filterState" onchange="applyFilters()"><option value="">All States</option></select>
-                <select id="filterArea" onchange="applyFilters()"><option value="">All Areas</option></select>
-                <select id="filterDept" onchange="applyFilters()"><option value="">All Departments</option></select>
-                <select id="filterGender" onchange="applyFilters()">
-                    <option value="">All Genders</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                </select>
-                
-                <div class="search-box">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="searchInput" placeholder="Search names, IDs..." onkeyup="applyFilters()">
+    <!-- DATA DECK (MAIN SCROLLABLE AREA) -->
+    <main class="data-deck">
+      <div class="deck-content">
+          
+          <!-- TAB 1: PERSONNEL REGISTRY -->
+          <div id="section-database" class="tab-content">
+              <header class="deck-header">
+                <div class="header-title">
+                    <h1>Personnel Registry</h1>
+                    <div class="status-indicator"><span class="pulse-dot"></span> Online</div>
                 </div>
-            </div>
-          </section>
+                <button class="cmd-btn-small" onclick="window.downloadFilteredData()">EXPORT CSV</button>
+              </header>
 
-          <!-- MASTER TABLE -->
-          <section class="table-wrapper animate-up">
-            <table id="adminTable">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>System ID</th>
-                  <th>Full Name</th>
-                  <th>Rank</th>
-                  <th>Category</th>
-                  <th>State / Area</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="tableBody"></tbody>
-            </table>
-          </section>
+              <section class="filter-strip">
+                <div class="filter-controls">
+                    <div class="filter-box"><select id="filterState" onchange="window.applyFilters()"><option value="">States</option></select></div>
+                    <div class="filter-box"><select id="filterDept" onchange="window.applyFilters()"><option value="">Departments</option></select></div>
+                    <div class="filter-box"><select id="filterRank" onchange="window.applyFilters()"><option value="">Ranks</option></select></div>
+                    <div class="search-bar">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="searchInput" placeholder="Search ID or Name..." onkeyup="window.applyFilters()">
+                    </div>
+                </div>
+              </section>
+
+              <div class="table-container">
+                <table class="registry-table">
+                  <thead>
+                    <tr><th>Time</th><th>Service ID</th><th>Full Name</th><th>Rank</th><th>Dept.</th><th>Command</th><th>Action</th></tr>
+                  </thead>
+                  <tbody id="tableBody"></tbody>
+                </table>
+              </div>
+          </div>
+
+          <!-- TAB: SECURITY HUB -->
+          <div id="section-resets" class="tab-content" style="display: none;">
+            <header class="deck-header"><h1>Password Resets</h1></header>
+            <div class="table-container">
+                <table class="registry-table">
+                    <thead><tr><th>Officer</th><th>ID</th><th>Time</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody id="resetTicketsBody"></tbody>
+                </table>
+            </div>
+          </div>
+
+          <!-- TAB: PROMOTION BOARD -->
+          <div id="section-promotions" class="tab-content" style="display: none;">
+            <header class="deck-header"><h1 id="promoTitle">Promotion Board</h1></header>
+            <div class="table-container">
+                <table class="registry-table">
+                    <thead><tr><th>Officer</th><th>Current</th><th>Proposed</th><th>State</th><th>Actions</th></tr></thead>
+                    <tbody id="promotionBody"></tbody>
+                </table>
+            </div>
+          </div>
+
+          <!-- TAB: TRAINING APPLICATIONS -->
+          <div id="section-enrollments" class="tab-content" style="display: none;">
+            <header class="deck-header"><h1>Training Applications</h1></header>
+            <div class="table-container">
+                <table class="registry-table">
+                    <thead><tr><th>Officer</th><th>Course</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+                    <tbody id="enrollmentBody"></tbody>
+                </table>
+            </div>
+          </div>
+
+          <!-- TAB: GRADUATION QUEUE -->
+          <div id="section-graduation" class="tab-content" style="display: none;">
+            <header class="deck-header"><h1>Graduation Queue</h1></header>
+            <div class="table-container">
+                <table class="registry-table">
+                    <thead><tr><th>Recruit ID</th><th>Name</th><th>CAD No.</th><th>State</th><th>Actions</th></tr></thead>
+                    <tbody id="graduationBody"></tbody>
+                </table>
+            </div>
+          </div>
+
+          <!-- TAB: LMS PUBLISHER -->
+          <div id="section-courses" class="tab-content" style="display: none;">
+            <header class="deck-header">
+                <h1>LMS Publisher</h1>
+                <button class="cmd-btn-small" onclick="window.initCourseModal()">CREATE COURSE</button>
+            </header>
+            <div id="courseListGrid" class="kpi-grid" style="grid-template-columns: 1fr 1fr 1fr; margin-top:20px;"></div>
+          </div>
+
+          <!-- TAB: ADMIN MANAGER -->
+          <div id="section-admins" class="tab-content" style="display: none;">
+            <header class="deck-header">
+                <h1>Admin Access Manager</h1>
+                <button class="cmd-btn-small" onclick="window.openModal('adminModal')">NEW ADMIN</button>
+            </header>
+            <div class="table-container">
+                <table class="registry-table">
+                    <thead><tr><th>Name</th><th>State</th><th>Role</th><th>Status</th><th>Action</th></tr></thead>
+                    <tbody id="adminUserBody"></tbody>
+                </table>
+            </div>
+          </div>
+
       </div>
-
-      <!-- FOOTER -->
-      <footer class="footer">
-        <div class="footer-container">
-          <div class="footer-grid">
-            <div class="footer-brand">
-              <div class="footer-logo-name">
-                <span>COMMUNITY AMBASSADOR</span>
-                <span>FOR DEVELOPMENTAL AND ENGAGEMENT</span>
-                <span>TECHNIQUES INITIATIVE</span> 
-                <span class="Last_Child">(C.A.D.E.T.I.)</span>
-              </div>
-              <p class="footer-motto">Building and securing the hope of youths in society.</p>
-              <div class="contact-details">
-                <p><i class="fas fa-envelope"></i> cadetinitiative1@gmail.com</p>
-                <p><i class="fas fa-phone"></i> +234 701-1888-770</p>
-              </div>
-            </div>
-            
-            <div class="footer-links">
-              <h4>Quick Links</h4>
-              <ul>
-                <li><a href="index.html">Home Portal</a></li>
-                <li><a href="recruit-reg.html">Recruit Registration</a></li>
-                <li><a href="member-validation.html">Member Validation</a></li>
-                <li><a href="old-member.html">Member Revalidation</a></li>
-              </ul>
-            </div>
-
-            <div class="footer-social">
-              <h4>Connect</h4>
-              <div class="social-icons">
-                <a href="https://www.facebook.com/share/17sJmwQRfN/" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://www.instagram.com/cadetinitiative/" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://whatsapp.com/channel/0029VaBt7fA9sBI0CF5WLL37" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-              </div>
-            </div>
-          </div>
-          <div class="footer-bottom">
-            <p>&copy; 2026 Oracle Tek GS. Master Admin Interface.</p>
-          </div>
-        </div>
-      </footer>
     </main>
-
-    <!-- Floating WhatsApp -->
-    <a href="https://wa.me/message/AZ2WMBRJHD2QJ1" class="whatsapp-float" target="_blank">
-      <i class="fab fa-whatsapp"></i>
-      <span>Admin Support</span>
-    </a>
-
   </div>
 
-  <script src="js/admin.js"></script>
+  <!-- 3. THE MODALS (Handshake with JS) -->
+
+  <!-- Modal: Profile Editor -->
+  <div id="editModal" class="modal-overlay">
+      <div class="modal-card">
+          <div class="modal-header">
+              <h3>Update Personnel File</h3>
+              <button onclick="closeModal('editModal')">&times;</button>
+          </div>
+          <form id="editOfficerForm" class="modal-form">
+              <input type="hidden" id="editUid">
+              <div class="input-group-modal"><label>Current Post Held</label><input type="text" id="editPost" required></div>
+              <div class="input-group-modal"><label>Department</label><select id="editDept"></select></div>
+              <div class="promotion-box"><label>Target Rank</label><select id="editRank"></select></div>
+              <button type="submit" class="cmd-btn">Commit Changes</button>
+          </form>
+      </div>
+  </div>
+
+  <!-- Modal: Course Creator -->
+  <div id="courseModal" class="modal-overlay">
+      <div class="modal-card">
+          <div class="modal-header">
+              <h3>Publish New Course</h3>
+              <button onclick="closeModal('courseModal')">&times;</button>
+          </div>
+          <form id="courseForm" class="modal-form">
+              <input type="text" id="cTitle" placeholder="Course Title" required>
+              <textarea id="cDesc" placeholder="Brief Course Description" rows="3"></textarea>
+              <div class="input-group-modal"><label>Min Rank Level</label><select id="cRank" required></select></div>
+              <div class="grid-2">
+                <div class="multi-select-area"><label>Eligible Depts</label><div id="cDeptsList" class="checkbox-grid"></div></div>
+                <div class="multi-select-area"><label>Eligible States</label><div id="cStatesList" class="checkbox-grid"></div></div>
+              </div>
+              <div class="input-group-modal"><label>Badge URL (Drive Link)</label><input type="text" id="cBadge" placeholder="Paste link here"></div>
+              <button type="submit" class="cmd-btn">Deploy Course</button>
+          </form>
+      </div>
+  </div>
+
+  <!-- Modal: New Admin Creator -->
+  <div id="adminModal" class="modal-overlay">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>Authorize New Admin</h3>
+            <button onclick="closeModal('adminModal')">&times;</button>
+        </div>
+        <form id="adminForm" class="modal-form">
+            <input type="text" id="newAdminName" placeholder="Full Name" required>
+            <input type="email" id="newAdminEmail" placeholder="Login Email" required>
+            <div class="input-group-modal"><label>Assigned Command</label><select id="newAdminState" required></select></div>
+            <div class="input-group-modal"><label>System Role</label><select id="newAdminRole" required><option value="state">State Admin</option><option value="super">Super Admin</option></select></div>
+            <button type="submit" class="cmd-btn">Create Admin Account</button>
+        </form>
+    </div>
+</div>
+
+  <a href="https://wa.me/message/AZ2WMBRJHD2QJ1" class="whatsapp-float" target="_blank">
+    <i class="fab fa-whatsapp"></i> <span>Support</span>
+  </a>
+
+  <script type="module" src="js/admin.js"></script>
 </body>
 </html>

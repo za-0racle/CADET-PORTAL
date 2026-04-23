@@ -15,7 +15,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaSQid7O0KeDO6fDhWDyhclRIuXAi7ckhWczXCaC9wwu0I25goEa4ycKdxbJ2IjmKCFg/exec";
+export const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwhdZcDwrlYmAJES_2AYNLUnBd7V-kgBWpOqGd0TN7hWGVDnX76asn7JIRb4OYuqZ3vZQ/exec";
 
 // Helper to turn Service Number into Shadow Email
 // Example: CAD/OG/OTW/026/001 -> cadogotw026001@cadeti.org

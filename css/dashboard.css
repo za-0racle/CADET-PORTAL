@@ -69,7 +69,7 @@
 .avatar-frame img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Prevents passport from stretching */
+    object-fit: cover;
 }
 
 .user-profile-brief {
@@ -92,14 +92,14 @@
     font-size: 12px;
 }
 
-/* SIDE NAV BUTTONS */
+/* SIDE NAV & TAB BUTTONS */
 .side-nav {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.side-nav a, .side-nav .logout-btn {
+.side-nav a, .side-nav .nav-item, .side-nav .logout-btn {
     display: flex;
     align-items: center;
     gap: 15px;
@@ -114,21 +114,30 @@
     border: none;
     cursor: pointer;
     width: 100%;
+    text-align: left;
 }
 
-.side-nav a.active, .side-nav a:hover {
+.side-nav .nav-item.active, .side-nav a.active, .side-nav .nav-item:hover, .side-nav a:hover {
     background: rgba(255, 255, 255, 0.1);
     color: white;
 }
 
+.side-nav .nav-item.active {
+    border-left: 4px solid #4caf50;
+    color: #4caf50;
+}
+
 .logout-btn {
-    margin-top: 20px;
-    background: #c62828 !important; /* Safety Red */
+    margin-top: 10px;
+    background: #c62828 !important;
     color: white !important;
 }
 
-.logout-btn:hover {
-    background: #e53935 !important;
+.logout-btn:hover { background: #e53935 !important; }
+
+.side-nav .p {
+    font-size: 10px;
+    font-weight: 300;
 }
 
 /* ==============================
@@ -159,7 +168,7 @@
 }
 
 /* ==============================
-   4. DATA CARDS GRID
+   4. DATA CARDS GRID (PROFILE)
    ============================== */
 .profile-data-grid {
     display: grid;
@@ -177,9 +186,7 @@
     transition: transform 0.3s ease;
 }
 
-.data-card:hover {
-    transform: translateY(-5px);
-}
+.data-card:hover { transform: translateY(-5px); }
 
 .data-card label {
     display: flex;
@@ -202,14 +209,6 @@
     margin-bottom: 5px;
 }
 
-.data-card p {
-    font-size: 14px;
-    color: #666;
-}
-
-/* ==============================
-   5. PERSONNEL DETAILS LIST
-   ============================== */
 .full-details-section {
     background: white;
     padding: 30px;
@@ -233,24 +232,139 @@
     border-bottom: 1px solid #f0f2f5;
 }
 
-.detail-item .label {
-    font-weight: 700;
-    color: #888;
-    font-size: 13px;
-    text-transform: uppercase;
+.detail-item .label { font-weight: 700; color: #888; font-size: 13px; text-transform: uppercase; }
+.detail-item .value { color: #333; font-weight: 500; text-align: right; }
+
+/* ==============================
+   5. LMS (LEARNING CENTER) STYLES
+   ============================== */
+.lms-header-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    border-top: 5px solid #f39c12; /* Gold for Training */
 }
 
-.detail-item .value {
-    color: #333;
-    font-weight: 500;
-    text-align: right;
+.header-stats {
+    display: flex;
+    gap: 50px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
 }
+
+.stat small { font-size: 10px; text-transform: uppercase; color: #888; font-weight: 700; }
+.stat h4 { font-family: 'Montserrat'; color: #002b05; font-size: 18px; margin-top: 5px; }
+
+.badge-row { display: flex; gap: 20px; flex-wrap: wrap; }
+.earned-badge { text-align: center; width: 90px; }
+.badge-icon {
+    width: 65px; height: 65px;
+    background: #f9f9f9;
+    border-radius: 50%;
+    margin: 0 auto 8px;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid #eee;
+}
+.earned-badge.active .badge-icon { border-color: #f39c12; background: #fff8e1; }
+.badge-icon img { width: 40px; height: 40px; object-fit: contain; }
+
+/* REFINED COURSE GRID */
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px;
+}
+
+.course-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid #eee;
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 220px;
+}
+
+.course-card h4 { 
+    font-family: 'Montserrat'; 
+    font-size: 15px; 
+    color: #333; 
+    margin-bottom: 10px; 
+    padding-right: 60px; /* Space for badge */
+}
+
+.course-card p { 
+    font-size: 12px; 
+    color: #777; 
+    line-height: 1.5; 
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+/* FIXED BADGE PREVIEW SIZE */
+.badge-preview {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: #fdfdfd;
+    border-radius: 8px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.badge-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.course-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 1px solid #f9f9f9;
+}
+
+.rank-tag {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: #f0f0f0;
+    color: #666;
+}
+
+.course-btn {
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-register { background: #002b05; color: white; }
+.btn-pending { background: #f39c12; color: white; }
+.btn-completed { background: #3498db; color: white; }
+
+.course-card.locked { opacity: 0.7; background: #fafafa; }
+.course-card.locked .badge-preview { filter: grayscale(1); opacity: 0.3; }
 
 /* ==============================
    6. MOBILE OFF-CANVAS SYSTEM
    ============================== */
-
-/* Hamburger Button (Hidden on Desktop) */
 .menu-toggle-btn {
     display: none;
     background: transparent;
@@ -261,12 +375,10 @@
     margin-right: 20px;
 }
 
-/* Close Button (Hidden on Desktop) */
 .close-sidebar {
     display: none;
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 20px; right: 20px;
     background: transparent;
     border: none;
     color: white;
@@ -274,84 +386,34 @@
     cursor: pointer;
 }
 
-/* Sidebar Overlay (Dark Backdrop) */
 .sidebar-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.6);
     z-index: 999;
-    display: none; /* Controlled by JS */
+    display: none;
     backdrop-filter: blur(4px);
 }
 
 @media screen and (max-width: 768px) {
-    .menu-toggle-btn { display: block; }
-    .close-sidebar { display: block; }
-
-    .sidebar {
-        left: -280px; /* Hide off-screen to the left */
-        transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        width: 280px;
-    }
-
-    /* Logic when sidebar is opened via JS */
-    .sidebar.active {
-        left: 0;
-    }
-
-    .sidebar-overlay.active {
-        display: block;
-    }
-
-    .main-content {
-        margin-left: 0; /* Full width on mobile */
-    }
-
-    .top-bar {
-        padding: 15px 20px;
-        display: flex;
-        align-items: center;
-    }
-
-    /* REFIX: Ensure Profile Brief (Photo) stays visible in the slide-out menu */
-    .user-profile-brief {
-        display: block !important; 
-        margin-top: 20px;
-    }
-
-    .side-nav span {
-        display: inline !important;
-    }
-
-    .profile-data-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .detail-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .detail-item .value {
-        text-align: left;
-        margin-top: 5px;
-    }
+    .menu-toggle-btn, .close-sidebar { display: block; }
+    .sidebar { left: -280px; transition: left 0.4s ease; width: 280px; }
+    .sidebar.active { left: 0; }
+    .sidebar-overlay.active { display: block; }
+    .main-content { margin-left: 0; }
+    .top-bar { padding: 15px 20px; display: flex; align-items: center; }
+    .header-stats { flex-direction: column; gap: 15px; }
+    .profile-data-grid { grid-template-columns: 1fr; }
+    .detail-item { flex-direction: column; align-items: flex-start; }
 }
 
 /* ==============================
    7. AUTH LOADER & PRINT
    ============================== */
 .login-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: #002b05;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
     z-index: 9999;
 }
 
@@ -366,7 +428,7 @@
 @keyframes spin { 100% { transform: rotate(360deg); } }
 
 @media print {
-    .sidebar, .top-bar, .sidebar-overlay, .menu-toggle-btn { display: none !important; }
+    .sidebar, .top-bar, .sidebar-overlay, .menu-toggle-btn, .course-btn { display: none !important; }
     .main-content { margin-left: 0 !important; padding: 0 !important; }
-    .data-card, .full-details-section { box-shadow: none !important; border: 1px solid #eee !important; }
+    .data-card, .full-details-section, .lms-header-card { box-shadow: none !important; border: 1px solid #eee !important; }
 }

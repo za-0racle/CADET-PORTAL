@@ -1,7 +1,7 @@
 // ==========================================
 // 1. CONFIGURATION
 // ==========================================
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaSQid7O0KeDO6fDhWDyhclRIuXAi7ckhWczXCaC9wwu0I25goEa4ycKdxbJ2IjmKCFg/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwhdZcDwrlYmAJES_2AYNLUnBd7V-kgBWpOqGd0TN7hWGVDnX76asn7JIRb4OYuqZ3vZQ/exec";
 
 // Mapping SDG numbers to professional icons
 const sdgIcons = {

@@ -17,12 +17,10 @@
 
 <div id="dashboardWrapper" class="dashboard-layout" style="display: none;">
     
-    <!-- 1. SIDEBAR OVERLAY (Visible only on mobile when menu is open) -->
     <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
-    <!-- 2. SIDEBAR -->
+    <!-- 1. SIDEBAR -->
     <aside class="sidebar" id="sidebar">
-        <!-- Close button for mobile -->
         <button class="close-sidebar" id="closeSidebar"><i class="fa-solid fa-xmark"></i></button>
 
         <div class="sidebar-header">
@@ -32,15 +30,26 @@
         
         <div class="user-profile-brief">
             <div class="avatar-frame">
-                 <img id="profilePhoto" src="images/logo.png" alt="Officer Photo">
+                 <img id="profilePhoto" src="/images/logo.png" alt="Officer Photo">
             </div>
             <h4 id="profileName">---</h4>
             <small id="profileRank">---</small>
         </div>
 
         <nav class="side-nav">
-            <a href="#" class="active"><i class="fa-solid fa-id-badge"></i> <span>Personnel Info</span></a>
+            <!-- TAB SWITCHERS -->
+            <button class="nav-item active" id="tab-profile-btn">
+                <i class="fa-solid fa-id-badge"></i> <span>Personnel Info</span>
+            </button>
+            <button class="nav-item" id="tab-lms-btn">
+                <i class="fa-solid fa-graduation-cap"></i> <span>Learning Center</span>
+            </button>
+
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 10px 0;">
+            
             <a href="#" id="downloadPDF" target="_blank"><i class="fa-solid fa-file-pdf"></i> <span>Download Form</span></a>
+            <a href="javascript:void(0)" id="openSecurityBtn"><i class="fa-solid fa-shield-halved"></i> <span>Security Settings</span></a>
+            
             <button class="logout-btn" id="logoutBtn">
                 <i class="fa-solid fa-power-off"></i> <span>Logout</span>
             </button>
@@ -51,53 +60,92 @@
         </div>
     </aside>
 
-    <!-- 3. MAIN CONTENT -->
+    <!-- 2. MAIN CONTENT -->
     <main class="main-content">
         <header class="top-bar">
-            <!-- Hamburger Toggle Button -->
-            <button class="menu-toggle-btn" id="sidebarToggle">
-                <i class="fa-solid fa-bars"></i>
-            </button>
+            <button class="menu-toggle-btn" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
 
             <div class="welcome-text">
-                <h1>Personnel Dashboard</h1>
+                <h1 id="pageTitle">Personnel Dashboard</h1>
                 <p id="serviceNumDisplay">Service Number: ---</p>
             </div>
         </header>
 
         <div class="content-wrap">
-            <!-- DATA CARDS GRID -->
-            <section class="profile-data-grid">
-                <div class="data-card animate-up">
-                    <label><i class="fa-solid fa-building-shield"></i> Current Command</label>
-                    <h3 id="dataState">---</h3>
-                    <p id="dataArea">---</p>
-                </div>
+            
+            <!-- SECTION A: PERSONNEL PROFILE (Existing) -->
+            <div id="profileSection">
+                <section class="profile-data-grid">
+                    <div class="data-card animate-up">
+                        <label><i class="fa-solid fa-building-shield"></i> Current Command</label>
+                        <h3 id="dataState">---</h3>
+                        <p id="dataArea">---</p>
+                    </div>
+                    <div class="data-card animate-up" style="animation-delay: 0.1s;">
+                        <label><i class="fa-solid fa-briefcase"></i> Assignment</label>
+                        <h3 id="dataDept">---</h3>
+                        <p id="dataPost">---</p>
+                    </div>
+                    <div class="data-card animate-up" style="animation-delay: 0.2s;">
+                        <label><i class="fa-solid fa-envelope"></i> Contact Info</label>
+                        <h3 id="dataPhone">---</h3>
+                        <p id="dataEmail">---</p>
+                    </div>
+                </section>
+
+                <section class="full-details-section card-shadow animate-up" style="animation-delay: 0.3s;">
+                    <h4 class="section-title">Personnel Records</h4>
+                    <div class="details-list">
+                        <div class="detail-item"><span class="label">Full Name:</span> <span id="full_name" class="value">---</span></div>
+                        <div class="detail-item"><span class="label">Residential Address:</span> <span id="full_address" class="value">---</span></div>
+                        <div class="detail-item"><span class="label">Current Occupation:</span> <span id="full_occupation" class="value">---</span></div>
+                        <div class="detail-item"><span class="label">Next of Kin:</span> <span id="full_nok" class="value">---</span></div>
+                        <div class="detail-item"><span class="label">Internal Unique ID:</span> <span id="full_uid" class="value">---</span></div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- SECTION B: LEARNING CENTER (LMS) - Hidden initially -->
+            <div id="lmsSection" style="display: none;">
                 
-                <div class="data-card animate-up" style="animation-delay: 0.1s;">
-                    <label><i class="fa-solid fa-briefcase"></i> Assignment</label>
-                    <h3 id="dataDept">---</h3>
-                    <p id="dataPost">---</p>
+                <!-- B1: Badge Achievement Gallery -->
+                <section class="lms-header-card animate-up">
+                    <div class="header-stats">
+                        <div class="stat">
+                            <small>Current Qualification</small>
+                            <h4 id="lmsRank">---</h4>
+                        </div>
+                        <div class="stat">
+                            <small>Training Status</small>
+                            <h4 id="lmsStatus">Active Duty</h4>
+                        </div>
+                    </div>
+                    
+                    <div class="achievements-container">
+                        <label><i class="fa-solid fa-medal"></i> My Earned Badges & Honors</label>
+                        <div id="badgeGallery" class="badge-row">
+                            <!-- JS will inject badges like: 
+                                 <div class="badge earned"><img src="badge1.png"><span>Basic Drill</span></div> 
+                            -->
+                            <p class="empty-msg">No certifications earned yet.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- B2: Course Catalog -->
+                <div class="catalog-title-row">
+                    <h3>Course Catalog</h3>
+                    <p>Unlock professional growth through specialized training.</p>
                 </div>
 
-                <div class="data-card animate-up" style="animation-delay: 0.2s;">
-                    <label><i class="fa-solid fa-envelope"></i> Contact Info</label>
-                    <h3 id="dataPhone">---</h3>
-                    <p id="dataEmail">---</p>
+                <div id="courseGrid" class="course-grid">
+                    <!-- JS will inject course cards like:
+                        <div class="course-card locked">...</div>
+                        <div class="course-card available">...</div>
+                    -->
+                    <p class="empty-msg">Checking for eligible courses...</p>
                 </div>
-            </section>
-
-            <!-- FULL PROFILE DETAILS TABLE -->
-            <section class="full-details-section card-shadow animate-up" style="animation-delay: 0.3s;">
-                <h4 class="section-title">Personnel Records</h4>
-                <div class="details-list">
-                    <div class="detail-item"><span class="label">Full Name:</span> <span id="full_name" class="value">---</span></div>
-                    <div class="detail-item"><span class="label">Residential Address:</span> <span id="full_address" class="value">---</span></div>
-                    <div class="detail-item"><span class="label">Current Occupation:</span> <span id="full_occupation" class="value">---</span></div>
-                    <div class="detail-item"><span class="label">Next of Kin:</span> <span id="full_nok" class="value">---</span></div>
-                    <div class="detail-item"><span class="label">Internal Unique ID:</span> <span id="full_uid" class="value">---</span></div>
-                </div>
-            </section>
+            </div>
         </div>
 
         <footer class="footer" style="background: transparent; border: none;">
@@ -106,6 +154,29 @@
             </div>
         </footer>
     </main>
+</div>
+<!-- CHANGE PASSWORD MODAL -->
+<div id="securityModal" class="sidebar-overlay" style="display: none; justify-content: center; align-items: center; z-index: 2000;">
+    <div class="data-card animate-up" style="max-width: 400px; width: 90%; background: white; border-top: 5px solid #cc0000; padding: 30px; position: relative;">
+        <button id="closeSecurityBtn" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+        
+        <h3 style="color: #002b05; font-family: 'Montserrat'; margin-bottom: 10px;">Account Security</h3>
+        <p style="font-size: 12px; color: #666; margin-bottom: 20px;">Update your access password below.</p>
+
+        <div class="input-group" style="margin-bottom: 15px;">
+            <input type="password" id="currentPassword" placeholder="Current Password" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+        </div>
+        <div class="input-group" style="margin-bottom: 15px;">
+            <input type="password" id="newPassword" placeholder="New Password" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+        </div>
+        
+        <button id="updatePasswordBtn" class="cta-btn btn-primary" style="width: 100%; justify-content: center;">
+            <span class="btn-text">Update Password</span>
+            <div class="spinner" id="securitySpinner" style="display:none; width:15px; height:15px; border-width:2px;"></div>
+        </button>
+        
+        <div id="securityMsg" style="margin-top: 15px; font-size: 12px; text-align: center; font-weight: 600;"></div>
+    </div>
 </div>
 
 <!-- PAGE LOADER -->

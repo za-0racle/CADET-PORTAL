@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="style.css"> <!-- Global styles -->
+    <link rel="stylesheet" href="css/style.css"> 
     <link rel="stylesheet" href="css/auth.css"> 
 </head>
 <body>
@@ -51,7 +51,6 @@
 
             <form id="loginForm">
                 <div class="input-group">
-                    <!-- Label changed to Service Number for clarity -->
                     <input type="text" id="loginServiceNum" placeholder="Service Number (CAD/...)" required>
                 </div>
                 <div class="input-group">
@@ -63,18 +62,55 @@
                     <div class="spinner"></div>
                 </button>
 
-                <div id="errorMessage" class="error-box" style="display: none; background: #fff5f5; border: 1px solid #ffcccc; color: #c00; padding: 10px; border-radius: 6px; margin-top: 15px; font-size: 13px;">
-                    <!-- Errors here -->
-                </div>
+                <div id="errorMessage" class="error-box" style="display: none; background: #fff5f5; border: 1px solid #ffcccc; color: #c00; padding: 10px; border-radius: 6px; margin-top: 15px; font-size: 13px;"></div>
 
-                <p style="margin-top: 20px; font-size: 12px; color: #666;">
-                    First time? <a href="signup.html" style="color: green; text-decoration: none; font-weight: 600;">Activate Account</a>
-                </p>
+                <div style="margin-top: 20px; font-size: 12px; color: #666; display: flex; flex-direction: column; gap: 10px;">
+                    <p>First time? <a href="signup.html" style="color: green; text-decoration: none; font-weight: 600;">Activate Account</a></p>
+                    
+                    <!-- NEW: Forgot Password Link -->
+                    <p>Access Issue? <a href="javascript:void(0)" id="forgotPasswordLink" style="color: #c00; text-decoration: none; font-weight: 600;">Forgot Password</a></p>
+                </div>
             </form>
         </div>
     </section>
 
-    <!-- UNIVERSAL FOOTER (Simplified for Auth pages) -->
+     <!-- NEW: PASSWORD RECOVERY MODAL (Corrected Structure) -->
+      <div id="resetModal" class="login-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 10000; align-items: center; justify-content: center;">
+    <div class="form-container animate-up" style="max-width: 400px; position: relative; margin: 20px; border-top: 5px solid #cc0000;">
+        <div style="text-align: right;">
+            <button id="closeResetBtn" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999;">&times;</button>
+        </div>
+        
+        <h3 style="color: #004d00; font-family: 'Montserrat'; font-size: 1.1rem; margin-bottom: 5px;">RECOVERY REQUEST</h3>
+        <p style="font-size: 11px; color: #666; margin-bottom: 20px;">Enter your Service Number to verify your identity.</p>
+        
+        <!-- Input Group 1: Service Number -->
+        <div class="input-group" style="margin-bottom: 10px;">
+            <input type="text" id="resetServiceNum" placeholder="Service Number (CAD/...)" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; text-transform: uppercase;">
+        </div>
+
+        <!-- NEW: Officer Name Display (Hidden until found) -->
+        <div id="nameDisplayArea" style="display: none; background: #f4fff4; padding: 10px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #2e7d32; text-align: left;">
+            <small style="font-size: 9px; color: #2e7d32; font-weight: 800; text-transform: uppercase;">Identity Verified:</small>
+            <p id="fetchedOfficerName" style="font-size: 14px; font-weight: 700; color: #333; margin: 0;"></p>
+        </div>
+
+        <!-- NEW: Contact Email Input -->
+        <div id="contactEmailGroup" style="display: none; margin-bottom: 15px; text-align: left;">
+            <label style="font-size: 11px; font-weight: 600; color: #444; margin-left: 5px;">Where should we send the reset link?</label>
+            <input type="email" id="resetContactEmail" placeholder="Current Email Address" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-top: 5px;">
+        </div>
+        
+        <button id="submitResetBtn" class="cmd-btn" style="background: #004d00; color: white; border: none; width: 100%; padding: 14px; border-radius: 8px; font-weight: 700; cursor: pointer; opacity: 0.5;" disabled>
+            <span class="btn-text">SUBMIT REQUEST</span>
+            <div class="spinner"></div>
+        </button>
+        
+        <div id="resetMessage" style="margin-top: 15px; font-size: 12px; font-weight: 600; line-height: 1.4;"></div>
+    </div>
+</div>
+    <!-- This closing tag is now in the right place -->
+    <!-- UNIVERSAL FOOTER -->
     <footer class="footer" style="background: transparent; border: none; color: white;">
         <div class="footer-bottom">
             <p>&copy; 2026 Oracle Tek Global Solution | CADETI National Headquaters</p>
